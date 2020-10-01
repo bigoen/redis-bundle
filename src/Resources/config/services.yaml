@@ -1,0 +1,7 @@
+services:
+    Bigoen\RedisBundle\Command\RedisFlushCommand:
+        arguments:
+            $parameterBag: '@parameter_bag'
+        tags:
+            - { name: 'console.command' }
+
