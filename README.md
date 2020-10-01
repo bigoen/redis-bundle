@@ -1,55 +1,40 @@
-BigoenStoreReceiptValidatorBundle
+BigoenRedisBundle
 ============================== 
 
 Setup
 ------------
-**Composer repository**
 ```
-# composer.json
-
-"repositories": [
-  {
-    "type":"composer",
-    "url":"https://composer.bigoen.net"
-  }
-]
-```
-or if you creates with unit tests. 
-```
-# composer.json
-
-"repositories": [
-        {
-            "type": "vcs",
-            "url": "git@gitlab.bigoen.net:symfony-bundle/security-bundle.git"
-        }
-    ],
-    "gitlab-domains": ["gitlab.bigoen.net"]
-]
-```
-**Composer Repository (Global)**
-```
-composer config -g repositories.bigoen composer https://composer.bigoen.net
+composer require bigoen/redis-bundle
 ```
 
-```
-composer require bigoen/store-receipt-validator-bundle
+```yaml
+# config/packages/bigoen_redis.yaml
+
+bigoen_redis:
+    clients:
+        session:
+            dsn: '127.0.0.1/1'
+            prefix: 'demo:session:*'
+        monolog:
+            dsn: '127.0.0.1/2'
+            key: 'demo:monolog'
+        doctrine_metadata_cache:
+            dsn: '127.0.0.1/3'
+            prefix: 'demo:metadata_cache:*'
+        doctrine_result_cache:
+            dsn: '127.0.0.1/3'
+            prefix: 'demo:result_cache:*'
+        doctrine_query_cache:
+            dsn: '127.0.0.1/3'
+            prefix: 'demo:query_cache:*'
+        doctrine_second_level_cache:
+            dsn: '127.0.0.1/4'
+            prefix: 'demo:second_level_cache:*'
 ```
 
-Details for integration,
-https://phabricator.bigoen.com/phame/post/view/96/google_play_store_%C3%B6deme_kontrol_entegrasyonu/
-```dotenv
-# .env.local
+**Commands:**
 
-###> bigoen/store-receipt-validator-bundle ###
-GOOGLE_SERVICE_PACKAGE_NAME='com.txtlapp'
-GOOGLE_SERVICE_AUTH_CONFIG_PATH='google-service-account-config.json'
-###< bigoen/store-receipt-validator-bundle ###
+clientName: monolog, session, doctrine_metadata_cache etc.
 ```
-```.gitignore
-# .gitignore
-
-###> bigoen/store-receipt-validator-bundle ###
-google-service-account-config.json
-###< bigoen/store-receipt-validator-bundle ###
+sc redis:flush {clientName}
 ```
