@@ -25,6 +25,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('dsn')->end()
                             ->scalarNode('prefix')->end()
                             ->scalarNode('key')->end()
+                            ->scalarNode('namespace')->end()
                         ->end()
                     ->end()
                 ->end()
