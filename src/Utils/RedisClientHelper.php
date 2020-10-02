@@ -21,8 +21,8 @@ class RedisClientHelper
     const NAMESPACE = "namespace";
 
     private ParameterBagInterface $parameterBag;
-    private RedisHelper $redisHelper;
-    private Redis $redis;
+    private ?RedisHelper $redisHelper = null;
+    private ?Redis $redis = null;
 
     private string $client;
 
@@ -54,11 +54,19 @@ class RedisClientHelper
 
     public function getRedisHelper(): RedisHelper
     {
+        if (!$this->redisHelper instanceof RedisHelper) {
+            $this->createRedisHelper();
+        }
+
         return $this->redisHelper;
     }
 
     public function getRedis(): Redis
     {
+        if (!$this->redis instanceof Redis) {
+            $this->createRedis();
+        }
+
         return $this->redis;
     }
 
