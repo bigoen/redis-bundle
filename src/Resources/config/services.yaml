@@ -1,7 +1,14 @@
 services:
     Bigoen\RedisBundle\Command\RedisFlushCommand:
         arguments:
-            $parameterBag: '@parameter_bag'
+            $clientHelper: '@bigoen_redis.client_helper'
         tags:
             - { name: 'console.command' }
+
+    Bigoen\RedisBundle\Utils\RedisClientHelper:
+        arguments:
+            $parameterBag: '@parameter_bag'
+
+    bigoen_redis.client_helper:
+        alias: Bigoen\RedisBundle\Utils\RedisClientHelper
 

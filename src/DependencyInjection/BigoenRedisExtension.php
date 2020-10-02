@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bigoen\RedisBundle\DependencyInjection;
 
+use Bigoen\RedisBundle\Utils\RedisClientHelper;
 use Exception;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -32,13 +33,16 @@ class BigoenRedisExtension extends Extension
         }
         foreach ($config['clients'] as $name => $client) {
             if (isset($client['dsn'])) {
-                $container->setParameter("bigoen_redis.client.{$name}.dsn", $client['dsn']);
+                $container->setParameter(RedisClientHelper::BASE_PARAMETER."{$name}.dsn", $client['dsn']);
             }
             if (isset($client['prefix'])) {
-                $container->setParameter("bigoen_redis.client.{$name}.prefix", $client['prefix']);
+                $container->setParameter(RedisClientHelper::BASE_PARAMETER."{$name}.prefix", $client['prefix']);
             }
             if (isset($client['key'])) {
-                $container->setParameter("bigoen_redis.client.{$name}.key", $client['key']);
+                $container->setParameter(RedisClientHelper::BASE_PARAMETER."{$name}.key", $client['key']);
+            }
+            if (isset($client['namespace'])) {
+                $container->setParameter(RedisClientHelper::BASE_PARAMETER."{$name}.namespace", $client['namespace']);
             }
         }
     }

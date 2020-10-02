@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bigoen\RedisBundle\Command;
 
+use Bigoen\RedisBundle\Utils\RedisClientHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,8 +14,16 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * @author Şafak Saylam <safak@bigoen.com>
  */
-class RedisFlushCommand extends AbstractCommand
+class RedisFlushCommand extends Command
 {
+    private RedisClientHelper $clientHelper;
+
+    public function __construct(RedisClientHelper $clientHelper)
+    {
+        parent::__construct(null);
+        $this->clientHelper = $clientHelper;
+    }
+
     protected static $defaultName = 'redis:flush';
 
     protected function configure(): void
@@ -34,24 +43,31 @@ class RedisFlushCommand extends AbstractCommand
 
             return Command::FAILURE;
         }
-        $option = $input->getArgument('client');
-        $dsn = "bigoen_redis.client.{$option}.dsn";
-        $prefix = "bigoen_redis.client.{$option}.prefix";
-        $key = "bigoen_redis.client.{$option}.key";
+        $client = $this->clientHelper->setClient($input->getArgument('client'))->createRedis();
+        $prefix = $this->clientHelper->getParameter('prefix');
+        $key = $this->clientHelper->getParameter('key');
         // check parameters.
-        $hasDsn = $this->parameterBag->has($dsn);
-        $hasPrefix = $this->parameterBag->has($prefix);
-        $hasKey = $this->parameterBag->has($key);
-        if (!$hasDsn || (!$hasPrefix && !$hasKey)) {
+        if (is_null($prefix) && is_null($key)) {
             $this->io->error("Parameters not found!");
 
             return Command::FAILURE;
         }
 
-        return $this->executeRedis(
-            $this->parameterBag->get($dsn),
-            $hasKey ? $this->parameterBag->get($key) : $this->parameterBag->get($prefix),
-            $hasKey
-        );
+        if (is_string($key)) {
+            $keys = [$key];
+        } else {
+            $keys = $client->keys($prefix);
+        }
+        $num = count($keys);
+        if (0 === $num) {
+            $this->io->error("Keys not found!");
+
+            return Command::FAILURE;
+        }
+        // delete keys.
+        $client->del($keys);
+        $this->io->success("Cache clear success it! Total clear: {$num}");
+
+        return Command::SUCCESS;
     }
 }
