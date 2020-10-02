@@ -45,7 +45,7 @@ class RedisHelper
         return $this->namespace;
     }
 
-    public function connect(): self
+    public function createRedis(): self
     {
         $this->redis = RedisAdapter::createConnection($this->dsn, $this->options);
 
@@ -55,7 +55,7 @@ class RedisHelper
     public function getRedis(): Redis
     {
         if (!$this->redis instanceof Redis) {
-            $this->connect();
+            $this->createRedis();
         }
 
         return $this->redis;
