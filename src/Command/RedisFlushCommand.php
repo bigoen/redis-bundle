@@ -41,7 +41,7 @@ class RedisFlushCommand extends Command
         if (!$input->hasArgument('client')) {
             $this->io->error("Flush client name required!");
 
-            return Command::FAILURE;
+            return Command::SUCCESS;
         }
         $client = $this->clientHelper->setClient($input->getArgument('client'))->createRedis();
         $prefix = $this->clientHelper->getParameter('prefix');
@@ -50,7 +50,7 @@ class RedisFlushCommand extends Command
         if (is_null($prefix) && is_null($key)) {
             $this->io->error("Parameters not found!");
 
-            return Command::FAILURE;
+            return Command::SUCCESS;
         }
 
         if (is_string($key)) {
@@ -62,7 +62,7 @@ class RedisFlushCommand extends Command
         if (0 === $num) {
             $this->io->error("Keys not found!");
 
-            return Command::FAILURE;
+            return Command::SUCCESS;
         }
         // delete keys.
         $client->del($keys);
