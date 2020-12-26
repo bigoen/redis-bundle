@@ -30,7 +30,7 @@ class RedisFlushCommand extends Command
     {
         $this
             ->setDescription('Flush redis client.')
-            ->addArgument('client', InputArgument::REQUIRED, 'Flush client name.')
+            ->addArgument('client', InputArgument::OPTIONAL, 'Flush client name')
         ;
     }
 
@@ -38,8 +38,10 @@ class RedisFlushCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
         // check option.
-        if (!$input->hasArgument('client')) {
+        if (is_null($input->getArgument('client'))) {
             $this->io->error("Flush client name required!");
+            $this->io->title('Clients');
+            $this->io->writeln($this->clientHelper->getParameter('clients'));
 
             return Command::SUCCESS;
         }

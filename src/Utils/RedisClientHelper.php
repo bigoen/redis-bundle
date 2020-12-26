@@ -24,7 +24,7 @@ class RedisClientHelper
     private ?RedisHelper $redisHelper = null;
     private ?Redis $redis = null;
 
-    private string $client;
+    private ?string $client = null;
 
     public function __construct(ParameterBagInterface $parameterBag)
     {

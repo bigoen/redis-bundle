@@ -31,6 +31,7 @@ class BigoenRedisExtension extends Extension
         if (!isset($config['clients']) || 0 === count($config['clients'])) {
             return;
         }
+        $container->setParameter(RedisClientHelper::BASE_PARAMETER.'.clients', array_keys($config['clients']));
         foreach ($config['clients'] as $name => $client) {
             if (isset($client['dsn'])) {
                 $container->setParameter(RedisClientHelper::BASE_PARAMETER."{$name}.dsn", $client['dsn']);
