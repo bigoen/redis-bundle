@@ -52,10 +52,10 @@ class RedisClientHelper
         return $this->parameterBag->get($parameter);
     }
 
-    public function getRedisHelper(): RedisHelper
+    public function getRedisHelper(bool $isSetNamespace = false): RedisHelper
     {
         if (!$this->redisHelper instanceof RedisHelper) {
-            $this->createRedisHelper();
+            $this->createRedisHelper($isSetNamespace);
         }
 
         return $this->redisHelper;
@@ -70,12 +70,14 @@ class RedisClientHelper
         return $this->redis;
     }
 
-    public function createRedisHelper(): RedisHelper
+    public function createRedisHelper(bool $isSetNamespace = false): RedisHelper
     {
         // create.
         $redisHelper = new RedisHelper($this->getParameter("dsn", true));
-        // set namespace.
-        $redisHelper->setNamespace($this->getParameter("namespace", true));
+        if (true === $isSetNamespace) {
+            // set namespace.
+            $redisHelper->setNamespace($this->getParameter("namespace", true));
+        }
         $this->redisHelper = $redisHelper;
 
         return $this->redisHelper;
