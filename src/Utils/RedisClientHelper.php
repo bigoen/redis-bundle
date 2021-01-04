@@ -72,7 +72,11 @@ class RedisClientHelper
 
     public function createRedisHelper(): RedisHelper
     {
-        $this->redisHelper = new RedisHelper($this->getParameter("dsn", true));
+        // create.
+        $redisHelper = new RedisHelper($this->getParameter("dsn", true));
+        // set namespace.
+        $redisHelper->setNamespace($this->getParameter("namespace", true));
+        $this->redisHelper = $redisHelper;
 
         return $this->redisHelper;
     }
