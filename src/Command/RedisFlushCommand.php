@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bigoen\RedisBundle\Command;
 
 use Bigoen\RedisBundle\Utils\RedisClientHelper;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,6 +15,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * @author Şafak Saylam <safak@bigoen.com>
  */
+#[AsCommand(
+    name: 'redis:flush',
+    description: 'Flush redis client.',
+)]
 class RedisFlushCommand extends Command
 {
     private RedisClientHelper $clientHelper;
@@ -24,14 +29,10 @@ class RedisFlushCommand extends Command
         $this->clientHelper = $clientHelper;
     }
 
-    protected static $defaultName = 'redis:flush';
 
     protected function configure(): void
     {
-        $this
-            ->setDescription('Flush redis client.')
-            ->addArgument('client', InputArgument::OPTIONAL, 'Flush client name')
-        ;
+        $this->addArgument('client', InputArgument::OPTIONAL, 'Flush client name');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
